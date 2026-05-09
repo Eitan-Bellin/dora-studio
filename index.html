@@ -378,6 +378,284 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
 
 /* ── SCROLL PROGRESS BAR ── */
 #scroll-prog{position:fixed;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--violet),var(--pink));z-index:600;transform-origin:left;transform:scaleX(0);transition:transform .1s linear}
+
+/* ══════════════════════════════════════
+   UPGRADE LAYER — DORA Studio v2.0
+══════════════════════════════════════ */
+
+/* ── FLOATING PILL NAV ── */
+nav{
+  top:1.5rem;
+  left:50%;
+  right:auto;
+  transform:translateX(-50%);
+  width:max-content;
+  max-width:calc(100vw - 2rem);
+  border-radius:100px;
+  padding:.75rem 2.5rem;
+  background:rgba(6,4,15,.6);
+  backdrop-filter:blur(28px) saturate(180%);
+  border:1px solid rgba(160,90,255,.2);
+  box-shadow:0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
+}
+nav.scrolled{
+  padding:.55rem 2rem;
+  background:rgba(6,4,15,.88);
+  border-color:rgba(160,90,255,.35);
+}
+@media(max-width:1024px){
+  nav{
+    left:0;right:0;top:0;
+    transform:none;
+    width:auto;
+    max-width:none;
+    border-radius:0;
+    padding:1.2rem 2rem;
+  }
+  nav.scrolled{padding:.9rem 2rem}
+}
+
+/* ── 3D ORB RINGS ── */
+.hero-orb{
+  position:absolute;
+  top:50%;left:18%;
+  transform:translate(-50%,-55%);
+  width:440px;height:440px;
+  pointer-events:none;
+  z-index:3;
+  transform-style:preserve-3d;
+}
+@media(max-width:900px){.hero-orb{display:none}}
+.orb-ring{
+  position:absolute;inset:0;
+  border-radius:50%;
+  border:1.5px solid rgba(160,90,255,.28);
+  transform-style:preserve-3d;
+  animation:orbSpin1 14s linear infinite;
+}
+.orb-ring:nth-child(2){
+  transform:rotateX(62deg);
+  border-color:rgba(224,64,251,.2);
+  animation:orbSpin2 20s linear infinite;
+}
+.orb-ring:nth-child(3){
+  transform:rotateY(48deg) rotateX(32deg);
+  border-color:rgba(160,90,255,.13);
+  animation:orbSpin3 28s linear infinite reverse;
+}
+.orb-dot{
+  position:absolute;
+  width:7px;height:7px;
+  border-radius:50%;
+  background:var(--violet);
+  box-shadow:0 0 14px 4px rgba(160,90,255,.9);
+  top:-3.5px;left:50%;
+  transform:translateX(-50%);
+}
+.orb-ring:nth-child(2) .orb-dot{background:var(--pink);box-shadow:0 0 14px 4px rgba(224,64,251,.9)}
+.orb-ring:nth-child(3) .orb-dot{display:none}
+.orb-center{
+  position:absolute;
+  width:70px;height:70px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(160,90,255,.35),transparent 70%);
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  box-shadow:0 0 50px 16px rgba(160,90,255,.18);
+  animation:orbPulse 3.5s ease-in-out infinite;
+}
+@keyframes orbSpin1{to{transform:rotateZ(360deg)}}
+@keyframes orbSpin2{to{transform:rotateX(62deg) rotateZ(360deg)}}
+@keyframes orbSpin3{to{transform:rotateY(48deg) rotateX(32deg) rotateZ(-360deg)}}
+@keyframes orbPulse{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(1)}50%{opacity:1;transform:translate(-50%,-50%) scale(1.35)}}
+
+/* ── PARTICLE CANVAS ── */
+#hero-particles{position:absolute;inset:0;z-index:2;pointer-events:none}
+
+/* ── GLASSMORPHISM 2.0 ── */
+.testi-slide-inner,.price-card{
+  position:relative;
+}
+.testi-slide-inner::before,.price-card::before{
+  content:'';
+  position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── CLASS CARD SPOTLIGHT ── */
+.cc{--spot:none}
+.cc .cc-spot{content:'';position:absolute;inset:0;background:var(--spot);pointer-events:none;z-index:1;transition:background .1s}
+
+/* ── TESTIMONIALS CAROUSEL ── */
+.testi-carousel{position:relative;overflow:hidden;margin-top:3.5rem;touch-action:pan-y;user-select:none}
+.testi-track{display:flex;transition:transform .65s cubic-bezier(.22,1,.36,1);will-change:transform}
+.testi-slide{flex:0 0 100%;padding:0}
+.testi-slide-inner{
+  border:1px solid var(--border);
+  padding:3.5rem;
+  background:linear-gradient(135deg,rgba(255,255,255,.035) 0%,rgba(160,90,255,.02) 100%);
+  backdrop-filter:blur(20px);
+  transition:border-color .4s, box-shadow .4s;
+  position:relative;
+  overflow:hidden;
+}
+.testi-slide.ts-active .testi-slide-inner{
+  border-color:rgba(160,90,255,.4);
+  box-shadow:0 0 40px rgba(160,90,255,.1);
+}
+.testi-large-txt{
+  font-size:clamp(1.1rem,2.5vw,1.55rem);
+  line-height:1.85;
+  color:var(--cream);
+  font-family:var(--font-a);
+  font-style:italic;
+  font-weight:300;
+  margin-bottom:2.5rem;
+}
+.testi-meta{display:flex;align-items:center;gap:1.2rem}
+.testi-meta .auth-av{width:52px;height:52px;font-size:1.1rem;flex-shrink:0}
+.testi-nav{
+  display:flex;align-items:center;
+  justify-content:center;
+  gap:1.5rem;
+  margin-top:2rem;
+}
+.testi-arrow{
+  width:46px;height:46px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  transition:all .3s;
+  flex-shrink:0;
+}
+.testi-arrow:hover{border-color:var(--violet);color:var(--violet);background:rgba(160,90,255,.08)}
+.testi-dots{display:flex;gap:.5rem;align-items:center}
+.t-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--border);
+  cursor:pointer;
+  transition:all .35s;
+}
+.t-dot.td-active{background:var(--violet);width:26px;border-radius:3px}
+.testi-progress{height:2px;background:rgba(160,90,255,.15);max-width:1280px;margin:1rem auto 0;overflow:hidden}
+.testi-progress-fill{height:100%;background:linear-gradient(90deg,var(--violet),var(--pink));width:0%;transition:width .12s linear}
+
+/* ── PRICING TOGGLE ── */
+.price-toggle-wrap{
+  display:flex;align-items:center;
+  justify-content:center;
+  gap:1.1rem;
+  margin-bottom:3rem;
+}
+.ptog-label{font-size:.8rem;letter-spacing:.1em;color:var(--muted);font-weight:300;transition:color .3s;cursor:pointer}
+.ptog-label.ptog-active{color:var(--cream);font-weight:700}
+.ptog-track{
+  width:50px;height:27px;
+  background:rgba(160,90,255,.2);
+  border:1px solid var(--border);
+  border-radius:100px;
+  cursor:pointer;
+  position:relative;
+  transition:background .35s, border-color .35s;
+  flex-shrink:0;
+}
+.ptog-track.ptog-on{background:linear-gradient(135deg,var(--violet),var(--pink));border-color:transparent}
+.ptog-thumb{
+  position:absolute;
+  top:2px;right:2px;
+  width:21px;height:21px;
+  border-radius:50%;
+  background:#fff;
+  transition:transform .35s var(--spring);
+  box-shadow:0 2px 8px rgba(0,0,0,.3);
+}
+.ptog-track.ptog-on .ptog-thumb{transform:translateX(-23px)}
+.save-tag{
+  display:inline-block;
+  background:linear-gradient(135deg,var(--violet),var(--pink));
+  color:#fff;
+  font-size:.58rem;padding:.18rem .55rem;
+  border-radius:2px;
+  letter-spacing:.1em;
+  margin-right:.4rem;
+  vertical-align:middle;
+  opacity:0;
+  transform:translateX(10px);
+  transition:opacity .35s, transform .35s var(--spring);
+}
+.ptog-track.ptog-on + .ptog-label .save-tag{opacity:1;transform:translateX(0)}
+.price-amount{display:inline-block;transition:opacity .15s, transform .15s}
+.price-amount.pa-flip{opacity:0;transform:rotateX(80deg)}
+
+/* ── ANIMATED SCHEDULE ── */
+#sch-rows .sch-row{animation:schRowIn .32s var(--ease) both}
+@keyframes schRowIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+/* ── SPOTS DOTS VISUAL ── */
+.spots-dots{display:flex;gap:3px;align-items:center;flex-wrap:wrap;max-width:80px}
+.spot-dot{width:8px;height:8px;border-radius:50%;background:var(--pink)}
+.spot-dot.empty{background:rgba(220,210,255,.1);border:1px solid rgba(220,210,255,.2)}
+
+/* ── MAGNETIC BUTTON ── */
+.mag{transition:transform .15s ease}
+
+/* ── CHARACTER WRAP ── */
+.char{display:inline-block;transition:opacity .45s,transform .45s;will-change:transform}
+
+/* ── FOOTER SVG SOCIAL ── */
+.soc-btn svg{width:16px;height:16px;fill:currentColor;display:block;transition:fill .3s}
+.soc-btn.soc-ig:hover{border-color:#e1306c;color:#e1306c;box-shadow:0 0 16px rgba(225,48,108,.25)}
+.soc-btn.soc-ig:hover svg{fill:#e1306c}
+.soc-btn.soc-wa:hover{border-color:#25d366;color:#25d366;box-shadow:0 0 16px rgba(37,211,102,.25)}
+.soc-btn.soc-wa:hover svg{fill:#25d366}
+.soc-btn.soc-fb:hover{border-color:#1877f2;color:#1877f2;box-shadow:0 0 16px rgba(24,119,242,.25)}
+.soc-btn.soc-fb:hover svg{fill:#1877f2}
+
+/* ── HERO GLOW AURA ── */
+.hero-aura{
+  position:absolute;
+  width:600px;height:600px;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(160,90,255,.12) 0%,transparent 70%);
+  z-index:2;
+  pointer-events:none;
+  animation:auraBreath 5s ease-in-out infinite;
+}
+@keyframes auraBreath{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.8}50%{transform:translate(-50%,-50%) scale(1.15);opacity:1}}
+
+/* ── ENHANCED HERO SCROLL INDICATOR ── */
+.scroll-line{background:linear-gradient(to bottom,transparent,var(--violet),var(--pink))}
+
+/* ── NAV ACTIVE LINK ── */
+.nav-links a.nav-active{color:var(--violet)}
+.nav-links a{position:relative}
+.nav-links a::after{
+  content:'';
+  position:absolute;
+  bottom:-4px;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,var(--violet),var(--pink));
+  transform:scaleX(0);
+  transition:transform .3s var(--ease);
+  transform-origin:right;
+}
+.nav-links a:hover::after,.nav-links a.nav-active::after{transform:scaleX(1);transform-origin:left}
+
+/* ── REDUCED MOTION ── */
+@media(prefers-reduced-motion:reduce){
+  .orb-ring{animation:none!important}
+  .orb-center{animation:none!important}
+  .hero-aura{animation:none!important}
+  #hero-particles{display:none}
+  .testi-track{transition:none!important}
+  .char{transition:none!important}
+}
 </style>
 </head>
 <body>
@@ -416,6 +694,14 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
   <div class="hero-img"></div>
   <div class="hero-glow"></div>
   <div class="hero-grid"></div>
+  <canvas id="hero-particles"></canvas>
+  <div class="hero-aura"></div>
+  <div class="hero-orb">
+    <div class="orb-ring"><div class="orb-dot"></div></div>
+    <div class="orb-ring"><div class="orb-dot"></div></div>
+    <div class="orb-ring"><div class="orb-dot"></div></div>
+    <div class="orb-center"></div>
+  </div>
   <div class="hero-content">
     <div class="hero-eyebrow">סטודיו כושר מקצועי · ראשון לציון</div>
     <h1 class="hero-title">
@@ -707,6 +993,17 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
     <div class="sec-div rev" style="margin:0 auto 1rem"></div>
     <p class="rev" style="font-size:.85rem;color:var(--muted);font-weight:300;max-width:420px;margin:0 auto;line-height:1.8">שיעור ניסיון ראשון — בחינם תמיד. אחר כך תבחרי את המסלול שמתאים לך.</p>
   </div>
+  <div class="price-toggle-wrap">
+    <span class="ptog-label ptog-active" id="ptog-month">חודשי</span>
+    <div class="ptog-track" id="ptog-track" onclick="togglePricing()">
+      <div class="ptog-thumb"></div>
+    </div>
+    <span class="ptog-label" id="ptog-year">
+      שנתי
+      <span class="save-tag">חסכי 20%</span>
+    </span>
+  </div>
+  <div id="ptog-save-wrap" class="ptog-on-show" style="display:none"></div>
   <div class="pricing-grid">
     <div class="price-card rev">
       <div class="price-name">כרטיסייה</div>
@@ -757,35 +1054,79 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
   <div style="max-width:1280px;margin:0 auto">
     <div class="sec-label rev">מה אומרות המתאמנות</div>
     <h2 class="sec-title rev">חוות דעת</h2>
-    <div class="testi-grid">
-      <div class="testi-card feat rev">
-        <div class="stars">★★★★★</div>
-        <span class="qt-mark">"</span>
-        <p class="testi-txt">הדר היא מדריכה יוצאת דופן. הגעתי אחרי לידה בלי כח ובלי ביטחון, ואחרי חצי שנה אצלה אני מרגישה שנולדתי מחדש. השיעורים שלה קשים אבל כל כך מהנים — ולא פעם יצאתי מהסטודיו עם חיוך ענק.</p>
-        <div class="testi-auth">
-          <div class="auth-av">מ</div>
-          <div><div class="auth-name">מיכל כהן</div><div class="auth-tag">פילאטיס · 8 חודשים</div></div>
+    <div class="testi-carousel rev" id="testi-carousel">
+      <div class="testi-track" id="testi-track">
+
+        <div class="testi-slide ts-active">
+          <div class="testi-slide-inner">
+            <div class="stars" style="margin-bottom:1.2rem">★★★★★</div>
+            <p class="testi-large-txt">"הדר היא מדריכה יוצאת דופן. הגעתי אחרי לידה בלי כח ובלי ביטחון, ואחרי חצי שנה אצלה אני מרגישה שנולדתי מחדש. השיעורים שלה קשים אבל כל כך מהנים — ולא פעם יצאתי מהסטודיו עם חיוך ענק."</p>
+            <div class="testi-meta">
+              <div class="auth-av">מ</div>
+              <div>
+                <div class="auth-name">מיכל כהן</div>
+                <div class="auth-tag">פילאטיס · 8 חודשים</div>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <div class="testi-slide">
+          <div class="testi-slide-inner">
+            <div class="stars" style="margin-bottom:1.2rem">★★★★★</div>
+            <p class="testi-large-txt">"קנגו של הדר = שיעור הכי מהנה שהיה לי בחיים. לא הרגשתי שאני מתאמנת, הרגשתי שאני בחגיגה. האנרגיה בסטודיו מדבקת, ואי אפשר שלא לצאת משם מאושרת."</p>
+            <div class="testi-meta">
+              <div class="auth-av">נ</div>
+              <div>
+                <div class="auth-name">נועה לוי</div>
+                <div class="auth-tag">קנגו ג'אמפ · 14 חודשים</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-slide">
+          <div class="testi-slide-inner">
+            <div class="stars" style="margin-bottom:1.2rem">★★★★★</div>
+            <p class="testi-large-txt">"הספינינג פה ברמה אחרת לגמרי. מוזיקה, אנרגיה, הדרכה — הכל מושקע עד הפרט האחרון. הדר יודעת בדיוק מתי לדחוף ומתי לנשום. ממליצה לכולן בעיניים עצומות."</p>
+            <div class="testi-meta">
+              <div class="auth-av">ש</div>
+              <div>
+                <div class="auth-name">שירה אברהם</div>
+                <div class="auth-tag">ספינינג · שנה וחצי</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="testi-slide">
+          <div class="testi-slide-inner">
+            <div class="stars" style="margin-bottom:1.2rem">★★★★★</div>
+            <p class="testi-large-txt">"פילאטיס מכשירים עם הדר שינה לי את הגוף ואת היחס לעצמי. לא ידעתי שאפשר להרגיש כל כך חזקה. אחרי שלושה חודשים כבר הרגשתי את ההבדל ביציבה, בנשימה, בביטחון."</p>
+            <div class="testi-meta">
+              <div class="auth-av">ל</div>
+              <div>
+                <div class="auth-name">לילך ברק</div>
+                <div class="auth-tag">פילאטיס מכשירים · 5 חודשים</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <div class="testi-card rev" style="transition-delay:.1s">
-        <div class="stars">★★★★★</div>
-        <span class="qt-mark">"</span>
-        <p class="testi-txt">קנגו של הדר = שיעור הכי מהנה שהיה לי בחיים. לא הרגשתי שאני מתאמנת, הרגשתי שאני בחגיגה.</p>
-        <div class="testi-auth">
-          <div class="auth-av">נ</div>
-          <div><div class="auth-name">נועה לוי</div><div class="auth-tag">קנגו ג'אמפ · 14 חודשים</div></div>
+
+      <div class="testi-nav">
+        <button class="testi-arrow" id="testi-prev" aria-label="הקודם">→</button>
+        <div class="testi-dots" id="testi-dots">
+          <div class="t-dot td-active" onclick="goSlide(0)"></div>
+          <div class="t-dot" onclick="goSlide(1)"></div>
+          <div class="t-dot" onclick="goSlide(2)"></div>
+          <div class="t-dot" onclick="goSlide(3)"></div>
         </div>
-      </div>
-      <div class="testi-card rev" style="transition-delay:.2s">
-        <div class="stars">★★★★★</div>
-        <span class="qt-mark">"</span>
-        <p class="testi-txt">הספינינג פה ברמה אחרת. מוזיקה, אנרגיה, הדרכה — הכל מושקע עד הפרט האחרון.</p>
-        <div class="testi-auth">
-          <div class="auth-av">ש</div>
-          <div><div class="auth-name">שירה אברהם</div><div class="auth-tag">ספינינג · שנה וחצי</div></div>
-        </div>
+        <button class="testi-arrow" id="testi-next" aria-label="הבא">←</button>
       </div>
     </div>
+    <div class="testi-progress"><div class="testi-progress-fill" id="testi-prog-fill"></div></div>
   </div>
 </section>
 
@@ -817,9 +1158,15 @@ footer{background:var(--black);border-top:1px solid var(--border);padding:3.5rem
       <div class="f-logo" style="margin-bottom:.9rem">DORA <span>STUDIO</span></div>
       <p>סטודיו כושר מקצועי בראשון לציון בהנהלת הדר בלין. מקום שבו כושר הופך לחוויה.</p>
       <div class="social-links" style="margin-top:1.2rem">
-        <a href="#" class="soc-btn" aria-label="Instagram">&#9670;</a>
-        <a href="#" class="soc-btn" aria-label="Facebook">&#9632;</a>
-        <a href="#" class="soc-btn" aria-label="WhatsApp">&#9650;</a>
+        <a href="#" class="soc-btn soc-ig mag" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </a>
+        <a href="#" class="soc-btn soc-fb mag" aria-label="Facebook">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="#" class="soc-btn soc-wa mag" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
       </div>
     </div>
     <div class="footer-col">
@@ -1007,4 +1354,294 @@ const skillObs=new IntersectionObserver(entries=>{
   });
 },{threshold:.3});
 document.querySelectorAll('.about-skill-bar').forEach(el=>skillObs.observe(el));
+
+// ══════════════════════════════════════
+// UPGRADE LAYER — DORA Studio v2.0
+// ══════════════════════════════════════
+
+// ── PARTICLE SYSTEM ──
+(function(){
+  const canvas = document.getElementById('hero-particles');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const isMobile = window.matchMedia('(max-width:768px)').matches;
+  const COUNT = isMobile ? 55 : 130;
+  let W, H, particles = [], mouse = {x:-999,y:-999}, raf;
+
+  function resize(){
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize, {passive:true});
+
+  document.querySelector('.hero').addEventListener('mousemove', e=>{
+    const r = canvas.getBoundingClientRect();
+    mouse.x = e.clientX - r.left;
+    mouse.y = e.clientY - r.top;
+  }, {passive:true});
+  document.querySelector('.hero').addEventListener('mouseleave', ()=>{ mouse.x=-999; mouse.y=-999; });
+
+  function mkParticle(){
+    const hue = Math.random() < 0.6 ? 270 : 290; // violet or pink
+    return {
+      x: Math.random()*W,
+      y: Math.random()*H,
+      vx: (Math.random()-.5)*.45,
+      vy: (Math.random()-.5)*.45 - .15,
+      size: Math.random()*2.2+.8,
+      life: Math.random(),
+      maxLife: Math.random()*180+80,
+      hue,
+      alpha: 0
+    };
+  }
+  for(let i=0;i<COUNT;i++){
+    const p = mkParticle();
+    p.life = Math.random()*p.maxLife;
+    particles.push(p);
+  }
+
+  let time=0;
+  function draw(){
+    raf = requestAnimationFrame(draw);
+    ctx.clearRect(0,0,W,H);
+    time++;
+
+    particles.forEach((p,i)=>{
+      p.life++;
+      if(p.life > p.maxLife){ Object.assign(particles[i], mkParticle()); return; }
+
+      // wind drift
+      p.vx += Math.sin(time*.0012 + i) * .004;
+      p.vy += Math.cos(time*.0008 + i*.7) * .003;
+      // mouse repulsion
+      const dx = p.x - mouse.x, dy = p.y - mouse.y;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      if(dist < 90){ const force = (90-dist)/90; p.vx += dx/dist*force*.6; p.vy += dy/dist*force*.6; }
+      // dampen
+      p.vx *= .985; p.vy *= .985;
+      p.x += p.vx; p.y += p.vy;
+      // wrap
+      if(p.x<-10) p.x=W+10; if(p.x>W+10) p.x=-10;
+      if(p.y<-10) p.y=H+20; if(p.y>H+20) p.y=-10;
+
+      const prog = p.life/p.maxLife;
+      p.alpha = Math.sin(prog*Math.PI) * .75;
+
+      const grad = ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*3.5);
+      grad.addColorStop(0, `hsla(${p.hue},100%,72%,${p.alpha})`);
+      grad.addColorStop(1, `hsla(${p.hue},100%,60%,0)`);
+      ctx.globalCompositeOperation='screen';
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.size*3.5,0,Math.PI*2);
+      ctx.fillStyle=grad;
+      ctx.fill();
+    });
+  }
+  draw();
+})();
+
+// ── 3D ORB SCROLL BIND ──
+(function(){
+  const orb = document.querySelector('.hero-orb');
+  if(!orb) return;
+  const rings = orb.querySelectorAll('.orb-ring');
+  window.addEventListener('scroll',()=>{
+    const hero = document.querySelector('.hero');
+    const prog = Math.min(scrollY / hero.offsetHeight, 1);
+    rings[0].style.transform = `rotateZ(${prog*120}deg)`;
+    rings[1].style.transform = `rotateX(62deg) rotateZ(${prog*-80}deg)`;
+    rings[2].style.transform = `rotateY(48deg) rotateX(32deg) rotateZ(${prog*60}deg)`;
+    orb.style.opacity = 1 - prog*1.4;
+  },{passive:true});
+})();
+
+// ── MAGNETIC BUTTONS ──
+(function(){
+  if(window.matchMedia('(pointer:coarse)').matches) return;
+  document.querySelectorAll('.btn-p,.nav-cta,.price-btn.popular,.mag').forEach(btn=>{
+    btn.addEventListener('mousemove',e=>{
+      const r=btn.getBoundingClientRect();
+      const dx=(e.clientX-r.left-r.width/2)*.3;
+      const dy=(e.clientY-r.top-r.height/2)*.3;
+      btn.style.transform=`translate(${dx}px,${dy}px)`;
+    });
+    btn.addEventListener('mouseleave',()=>{
+      btn.style.transition='transform .5s cubic-bezier(.175,.885,.32,1.275)';
+      btn.style.transform='';
+      setTimeout(()=>btn.style.transition='',520);
+    });
+  });
+})();
+
+// ── CLASS CARD SPOTLIGHT + ENHANCED TILT ──
+document.querySelectorAll('.cc').forEach(card=>{
+  const spot = document.createElement('div');
+  spot.className='cc-spot';
+  card.appendChild(spot);
+
+  card.addEventListener('mousemove',e=>{
+    const r=card.getBoundingClientRect();
+    const x=e.clientX-r.left, y=e.clientY-r.top;
+    const nx=x/r.width-.5, ny=y/r.height-.5;
+    card.style.transform=`perspective(900px) rotateY(${nx*9}deg) rotateX(${-ny*6}deg) scale(1.018) translateZ(8px)`;
+    spot.style.background=`radial-gradient(circle 280px at ${x}px ${y}px,rgba(160,90,255,.14),transparent)`;
+  });
+  card.addEventListener('mouseleave',()=>{
+    card.style.transform='';
+    spot.style.background='none';
+  });
+});
+
+// ── CHARACTER SCRAMBLE (hero title DORA) ──
+(function(){
+  const el = document.querySelector('.hero-title .grad');
+  if(!el) return;
+  const original = el.textContent.trim();
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let iter = 0, maxIter = 7;
+  const interval = setInterval(()=>{
+    el.textContent = original.split('').map((c,i)=>{
+      if(i < Math.floor(iter*(original.length/maxIter))) return c;
+      return chars[Math.floor(Math.random()*chars.length)];
+    }).join('');
+    iter++;
+    if(iter > maxIter){ clearInterval(interval); el.textContent = original; }
+  }, 65);
+})();
+
+// ── ACTIVE NAV SECTION HIGHLIGHT ──
+(function(){
+  const sections = document.querySelectorAll('section[id]');
+  const links = document.querySelectorAll('.nav-links a');
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(a=>a.classList.remove('nav-active'));
+        const active = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+        if(active) active.classList.add('nav-active');
+      }
+    });
+  },{threshold:.4});
+  sections.forEach(s=>obs.observe(s));
+})();
+
+// ── TESTIMONIALS CAROUSEL ──
+(function(){
+  const track = document.getElementById('testi-track');
+  if(!track) return;
+  const slides = track.querySelectorAll('.testi-slide');
+  const dots = document.querySelectorAll('.t-dot');
+  const progFill = document.getElementById('testi-prog-fill');
+  let cur = 0, total = slides.length, timer, progTimer, progVal=0;
+  const AUTO = 6000, isRTL = document.documentElement.dir==='rtl';
+
+  function goSlide(idx){
+    slides[cur].classList.remove('ts-active');
+    dots[cur].classList.remove('td-active');
+    cur = (idx+total)%total;
+    slides[cur].classList.add('ts-active');
+    dots[cur].classList.add('td-active');
+    track.style.transform = `translateX(${isRTL ? cur : -cur}00%)`;
+    resetProg();
+  }
+  window.goSlide = goSlide;
+
+  function next(){ goSlide(cur + (isRTL?-1:1)); }
+  function prev(){ goSlide(cur + (isRTL?1:-1)); }
+
+  document.getElementById('testi-next').addEventListener('click', next);
+  document.getElementById('testi-prev').addEventListener('click', prev);
+
+  // drag/swipe
+  let startX=0, dragging=false;
+  track.addEventListener('pointerdown',e=>{ startX=e.clientX; dragging=true; track.style.transition='none'; clearInterval(timer); });
+  window.addEventListener('pointermove',e=>{ if(!dragging) return; });
+  window.addEventListener('pointerup',e=>{
+    if(!dragging) return; dragging=false;
+    track.style.transition='';
+    const delta = e.clientX - startX;
+    if(Math.abs(delta)>50){ delta < 0 ? next() : prev(); } else { goSlide(cur); }
+    startAuto();
+  });
+
+  function resetProg(){ clearInterval(progTimer); progVal=0; progFill.style.transition='none'; progFill.style.width='0%'; requestAnimationFrame(()=>{ progFill.style.transition='width '+AUTO+'ms linear'; progFill.style.width='100%'; }); }
+  function startAuto(){ clearInterval(timer); timer=setInterval(next, AUTO); resetProg(); }
+  startAuto();
+})();
+
+// ── PRICING TOGGLE ──
+(function(){
+  const track = document.getElementById('ptog-track');
+  if(!track) return;
+  const mLabel = document.getElementById('ptog-month');
+  const yLabel = document.getElementById('ptog-year');
+  let annual = false;
+
+  const prices = {
+    monthly: ['₪290','₪350','₪520'],
+    annual:  ['₪233','₪280','₪416']
+  };
+  const amounts = document.querySelectorAll('.price-amount');
+
+  window.togglePricing = function(){
+    annual = !annual;
+    track.classList.toggle('ptog-on', annual);
+    mLabel.classList.toggle('ptog-active', !annual);
+    yLabel.classList.toggle('ptog-active', annual);
+
+    amounts.forEach((el,i)=>{
+      el.classList.add('pa-flip');
+      setTimeout(()=>{
+        el.textContent = annual ? prices.annual[i] : prices.monthly[i];
+        el.classList.remove('pa-flip');
+      },160);
+    });
+  };
+})();
+
+// ── ANIMATED SCHEDULE (fade rows on day change) ──
+(function(){
+  const origSetDay = window.setDay;
+  window.setDay = function(btn, day){
+    const rows = document.getElementById('sch-rows');
+    rows.style.opacity='0';
+    rows.style.transform='translateY(-6px)';
+    rows.style.transition='opacity .18s,transform .18s';
+    setTimeout(()=>{
+      origSetDay(btn, day);
+      rows.style.opacity='';
+      rows.style.transform='';
+      rows.style.transition='opacity .28s,transform .28s';
+      // stagger rows
+      rows.querySelectorAll('.sch-row').forEach((r,i)=>{
+        r.style.animationDelay=i*38+'ms';
+      });
+    },200);
+  };
+})();
+
+// ── SPOTS DOTS UPGRADE ──
+(function(){
+  const MAX_DOTS = 8;
+  function upgradeDots(){
+    document.querySelectorAll('.cell-spots').forEach(cell=>{
+      const n = parseInt(cell.textContent);
+      if(isNaN(n)) return;
+      const total = Math.min(n + Math.floor(Math.random()*4)+2, MAX_DOTS);
+      let html='<div class="spots-dots">';
+      for(let i=0;i<total;i++) html+=`<div class="spot-dot${i>=n?' empty':''}"></div>`;
+      html+='</div>';
+      cell.innerHTML=html;
+    });
+  }
+  // patch renderSch
+  const origRender = window.renderSch;
+  window.renderSch = function(day){
+    origRender(day);
+    setTimeout(upgradeDots, 10);
+  };
+  setTimeout(upgradeDots, 100);
+})();
 </script>
