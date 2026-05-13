@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DORA Studio — עורך תוכן</title>
+<script src="content.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f0d17;--surface:#1a1728;--card:#221e35;--border:#332d50;
+  --violet:#a05aff;--pink:#e040fb;--cream:#f0ecff;--muted:rgba(220,210,255,.55);
+  --green:#22c55e;--red:#ef4444;--yellow:#f59e0b;
+  --radius:10px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--cream);min-height:100vh;display:flex}
+
+/* SIDEBAR */
+aside{
+  width:220px;min-width:220px;background:var(--surface);
+  border-left:1px solid var(--border);
+  position:sticky;top:0;height:100vh;overflow-y:auto;
+  display:flex;flex-direction:column;
+  padding:1.5rem 0 1rem;
+}
+.logo{text-align:center;font-size:1.25rem;font-weight:800;
+  background:linear-gradient(135deg,var(--violet),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;padding:0 1rem 1.5rem;border-bottom:1px solid var(--border);margin-bottom:1rem}
+.logo small{display:block;font-size:.65rem;letter-spacing:.12em;color:var(--muted);font-weight:400;
+  -webkit-text-fill-color:var(--muted);margin-top:.2rem}
+nav a{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.65rem 1.2rem;font-size:.82rem;color:var(--muted);
+  text-decoration:none;border-right:3px solid transparent;
+  transition:all .2s;cursor:pointer;
+}
+nav a:hover{color:var(--cream);background:rgba(160,90,255,.06)}
+nav a.active{color:var(--violet);border-right-color:var(--violet);background:rgba(160,90,255,.08);font-weight:600}
+nav a .icon{font-size:1rem;width:20px;text-align:center}
+.save-btn-wrap{margin-top:auto;padding:1rem 1rem 0;border-top:1px solid var(--border)}
+.save-btn{
+  width:100%;padding:.75rem;
+  background:linear-gradient(135deg,var(--violet),var(--pink));
+  border:none;color:#fff;font-size:.85rem;font-weight:700;
+  border-radius:var(--radius);cursor:pointer;
+  transition:opacity .2s,transform .15s;letter-spacing:.04em;
+}
+.save-btn:hover{opacity:.9;transform:translateY(-1px)}
+.save-btn:active{transform:translateY(0)}
+
+/* MAIN */
+main{flex:1;padding:2rem 2.5rem;max-width:900px;overflow-x:hidden}
+.page-title{font-size:1.6rem;font-weight:800;margin-bottom:.3rem}
+.page-sub{font-size:.82rem;color:var(--muted);margin-bottom:2rem}
+
+/* SECTIONS */
+.section{display:none;animation:fadeIn .25s ease}
+.section.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1.2rem}
+.card-title{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--violet);margin-bottom:1.2rem;font-weight:700}
+
+/* FORM FIELDS */
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.field-row.full{grid-template-columns:1fr}
+.field{display:flex;flex-direction:column;gap:.35rem}
+label{font-size:.75rem;color:var(--muted);font-weight:600;letter-spacing:.05em}
+input[type=text],input[type=tel],input[type=url],textarea,select{
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--cream);padding:.65rem .85rem;border-radius:6px;
+  font-family:inherit;font-size:.85rem;outline:none;
+  transition:border-color .2s;direction:rtl;width:100%;
+}
+input:focus,textarea:focus{border-color:var(--violet);box-shadow:0 0 0 2px rgba(160,90,255,.15)}
+textarea{resize:vertical;min-height:90px;line-height:1.6}
+input::placeholder,textarea::placeholder{color:rgba(220,210,255,.25)}
+
+/* IMAGE UPLOAD */
+.img-upload-wrap{display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap}
+.img-preview{
+  width:110px;height:110px;border:2px dashed var(--border);
+  border-radius:8px;overflow:hidden;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--surface);cursor:pointer;transition:border-color .2s;position:relative;
+}
+.img-preview:hover{border-color:var(--violet)}
+.img-preview img{width:100%;height:100%;object-fit:cover}
+.img-preview .ph{font-size:2rem;opacity:.3}
+.img-preview input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer}
+.img-controls{flex:1;display:flex;flex-direction:column;gap:.5rem}
+.img-note{font-size:.7rem;color:var(--muted);line-height:1.5;margin-top:.3rem}
+
+/* SCHEDULE */
+.sch-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.sch-tab{
+  padding:.4rem .9rem;border:1px solid var(--border);
+  background:transparent;color:var(--muted);font-size:.75rem;
+  border-radius:4px;cursor:pointer;transition:all .2s;font-family:inherit;
+}
+.sch-tab.active{background:linear-gradient(135deg,var(--violet),var(--pink));border-color:transparent;color:#fff;font-weight:700}
+.sch-tab:hover:not(.active){border-color:var(--violet);color:var(--violet)}
+.sch-table{width:100%;border-collapse:collapse;margin-bottom:.8rem}
+.sch-table th{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);padding:.5rem .6rem;text-align:right;border-bottom:1px solid var(--border)}
+.sch-table td{padding:.35rem .4rem;vertical-align:middle}
+.sch-table td input{font-size:.8rem;padding:.4rem .6rem}
+.sch-table tr:hover td{background:rgba(160,90,255,.04)}
+.sch-input-small{width:80px!important}
+.sch-input-num{width:70px!important}
+.del-btn{background:none;border:1px solid rgba(239,68,68,.3);color:var(--red);width:28px;height:28px;border-radius:4px;cursor:pointer;font-size:.9rem;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.del-btn:hover{background:rgba(239,68,68,.1);border-color:var(--red)}
+.add-row-btn{
+  background:rgba(160,90,255,.1);border:1px dashed rgba(160,90,255,.4);
+  color:var(--violet);padding:.5rem 1rem;border-radius:6px;
+  cursor:pointer;font-size:.78rem;font-family:inherit;
+  transition:all .2s;width:100%;margin-top:.3rem;
+}
+.add-row-btn:hover{background:rgba(160,90,255,.18)}
+
+/* FAQ / TESTIMONIALS */
+.accordion-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.7rem;overflow:hidden}
+.acc-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.85rem 1rem;cursor:pointer;background:var(--surface);
+  font-size:.84rem;font-weight:600;
+  transition:background .2s;user-select:none;gap:1rem;
+}
+.acc-head:hover{background:rgba(160,90,255,.06)}
+.acc-head .acc-drag{color:var(--muted);font-size:1rem}
+.acc-body{padding:1rem;border-top:1px solid var(--border);background:var(--card);display:none}
+.acc-body.open{display:block}
+.acc-actions{display:flex;gap:.5rem;margin-top:.7rem;justify-content:flex-end}
+.btn-sm{padding:.4rem .85rem;border-radius:5px;font-size:.75rem;cursor:pointer;font-family:inherit;border:none;font-weight:600;transition:all .2s}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.btn-danger:hover{background:rgba(239,68,68,.25)}
+.btn-add{background:rgba(160,90,255,.15);color:var(--violet);border:1px solid rgba(160,90,255,.3);padding:.6rem 1.2rem;width:100%;margin-top:.5rem}
+.btn-add:hover{background:rgba(160,90,255,.25)}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;display:flex;flex-direction:column;gap:.4rem}
+.stat-num{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,var(--violet),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--green);color:#fff;padding:.75rem 1.5rem;
+  border-radius:8px;font-size:.85rem;font-weight:700;
+  transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .35s;
+  opacity:0;z-index:9999;pointer-events:none;white-space:nowrap;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);
+}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* NOTICE BOX */
+.notice{background:rgba(160,90,255,.08);border:1px solid rgba(160,90,255,.25);border-radius:8px;padding:1rem 1.2rem;font-size:.8rem;color:var(--muted);line-height:1.7;margin-bottom:1.2rem}
+.notice strong{color:var(--violet)}
+.notice ul{margin-right:1rem;margin-top:.4rem}
+.notice li{margin-bottom:.2rem}
+
+/* PREVIEW LINK */
+.preview-link{display:inline-flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--violet);text-decoration:none;padding:.4rem .8rem;border:1px solid rgba(160,90,255,.3);border-radius:5px;margin-bottom:1.5rem;transition:all .2s}
+.preview-link:hover{background:rgba(160,90,255,.1)}
+
+@media(max-width:700px){
+  body{flex-direction:column}
+  aside{width:100%;min-width:0;height:auto;position:static;flex-direction:row;overflow-x:auto;padding:.5rem}
+  .logo{display:none}
+  nav{display:flex;flex-direction:row}
+  nav a{padding:.5rem .7rem;font-size:.72rem;border-right:none;border-bottom:2px solid transparent;white-space:nowrap}
+  nav a.active{border-bottom-color:var(--violet);border-right:none}
+  .save-btn-wrap{margin:0;padding:.5rem;border-top:none}
+  main{padding:1rem}
+  .field-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<aside>
+  <div class="logo">DORA<br><small>עורך תוכן</small></div>
+  <nav id="sidebar-nav">
+    <a class="active" onclick="showSection('contact')"><span class="icon">📞</span> יצירת קשר</a>
+    <a onclick="showSection('photos')"><span class="icon">📸</span> תמונות</a>
+    <a onclick="showSection('stats')"><span class="icon">📊</span> סטטיסטיקות</a>
+    <a onclick="showSection('schedule')"><span class="icon">🗓</span> לוח שיעורים</a>
+    <a onclick="showSection('faq')"><span class="icon">❓</span> שאלות נפוצות</a>
+    <a onclick="showSection('testimonials')"><span class="icon">💬</span> עדויות</a>
+  </nav>
+  <div class="save-btn-wrap">
+    <button class="save-btn" onclick="saveContent()">💾 שמור ועדכן</button>
+  </div>
+</aside>
+
+<main>
+  <a href="index.html" target="_blank" class="preview-link">👁 צפי באתר →</a>
+
+  <!-- CONTACT -->
+  <div class="section active" id="sec-contact">
+    <div class="page-title">יצירת קשר</div>
+    <div class="page-sub">מספר טלפון, כתובת, שעות פתיחה וסושיאל</div>
+
+    <div class="card">
+      <div class="card-title">📞 פרטי קשר</div>
+      <div class="field-row">
+        <div class="field">
+          <label>מספר טלפון (להצגה)</label>
+          <input type="tel" id="f-phone" placeholder="0508729361">
+        </div>
+        <div class="field">
+          <label>וואטסאפ (קוד מדינה + מספר)</label>
+          <input type="tel" id="f-whatsapp" placeholder="972508729361">
+        </div>
+      </div>
+      <div class="field-row full">
+        <div class="field">
+          <label>הודעת ברירת מחדל לוואטסאפ</label>
+          <input type="text" id="f-wa-msg" placeholder="שלום הדר! אני מתעניינת...">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>כתובת</label>
+          <input type="text" id="f-address" placeholder="ראשון לציון">
+        </div>
+        <div class="field">
+          <label>חניה</label>
+          <input type="text" id="f-parking" placeholder="חניה חינמית ברחוב הסטודיו">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🕐 שעות פתיחה</div>
+      <div class="field-row">
+        <div class="field">
+          <label>ימים א׳–ה׳</label>
+          <input type="text" id="f-hours-week" placeholder="א׳–ה׳ 06:00–22:00">
+        </div>
+        <div class="field">
+          <label>שישי</label>
+          <input type="text" id="f-hours-fri" placeholder="שישי 07:00–14:00">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📱 רשתות חברתיות</div>
+      <div class="field-row">
+        <div class="field">
+          <label>Instagram (username)</label>
+          <input type="text" id="f-instagram" placeholder="@dora.studio.il">
+        </div>
+        <div class="field">
+          <label>Instagram (קישור מלא)</label>
+          <input type="url" id="f-instagram-url" placeholder="https://instagram.com/...">
+        </div>
+      </div>
+      <div class="field-row full">
+        <div class="field">
+          <label>Facebook (קישור) — ריק = לא יוצג</label>
+          <input type="url" id="f-facebook-url" placeholder="https://facebook.com/...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PHOTOS -->
+  <div class="section" id="sec-photos">
+    <div class="page-title">תמונות</div>
+    <div class="page-sub">העלי תמונות מהמחשב או הכניסי קישור מהאינטרנט</div>
+
+    <div class="notice">
+      <strong>איך להעלות תמונה?</strong>
+      <ul>
+        <li>לחצי על הריבוע ובחרי קובץ מהמחשב — התמונה תשמר ישירות</li>
+        <li>או הדבקי קישור URL מהאינטרנט (Google Photos, Instagram וכו')</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📸 תמונת הדר (מופיעה בשני מקומות)</div>
+      <div class="img-upload-wrap">
+        <div class="img-preview" id="prev-hadar" onclick="document.getElementById('file-hadar').click()">
+          <span class="ph">👤</span>
+          <input type="file" id="file-hadar" accept="image/*" onchange="handleFile(this,'f-hadar','prev-hadar')" style="display:none">
+        </div>
+        <div class="img-controls">
+          <div class="field">
+            <label>קישור URL (אם לא מעלים קובץ)</label>
+            <input type="url" id="f-hadar" placeholder="https://..." oninput="updatePreviewFromUrl('f-hadar','prev-hadar')">
+          </div>
+          <div class="img-note">💡 לחצי על הריבוע להעלאת קובץ, או הכניסי קישור</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="class-photos-container"></div>
+
+  </div>
+
+  <!-- STATS -->
+  <div class="section" id="sec-stats">
+    <div class="page-title">סטטיסטיקות</div>
+    <div class="page-sub">המספרים שמופיעים בבאנר הנתונים</div>
+    <div class="card">
+      <div class="card-title">📊 ארבעת המספרים</div>
+      <div class="stats-grid" id="stats-grid"></div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE -->
+  <div class="section" id="sec-schedule">
+    <div class="page-title">לוח שיעורים</div>
+    <div class="page-sub">ערכי שיעורים, שעות ומקומות לכל יום</div>
+    <div class="card">
+      <div class="sch-tabs" id="sch-tabs"></div>
+      <div id="sch-editor"></div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" id="sec-faq">
+    <div class="page-title">שאלות נפוצות</div>
+    <div class="page-sub">ערכי שאלות ותשובות שמופיעות בדף</div>
+    <div id="faq-list"></div>
+    <button class="btn-sm btn-add" onclick="addFaq()">+ הוסיפי שאלה חדשה</button>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="section" id="sec-testimonials">
+    <div class="page-title">עדויות מתאמנות</div>
+    <div class="page-sub">ערכי ציטוטים ושמות של מתאמנות</div>
+    <div id="testi-list"></div>
+    <button class="btn-sm btn-add" onclick="addTestimonial()">+ הוסיפי עדות חדשה</button>
+  </div>
+
+</main>
+
+<div class="toast" id="toast">✅ נשמר! רענני את האתר לראות שינויים</div>
+
+<script>
+// ── State ─────────────────────────────────────
+let D = window.DORA ? JSON.parse(JSON.stringify(window.DORA)) : {};
+let activeDay = Object.keys(D.schedule||{})[0] || 'ראשון';
+const DAYS = ['ראשון','שני','שלישי','רביעי','חמישי','שישי'];
+const CLASS_PHOTO_KEYS = [
+  {key:'photo_pilates_mat', label:'פילאטיס מזרן'},
+  {key:'photo_pilates_eq',  label:'פילאטיס מכשירים'},
+  {key:'photo_kango',       label:"קנגו ג'אמפ"},
+  {key:'photo_spinning',    label:'ספינינג'},
+  {key:'photo_strength',    label:'חדר כח'},
+  {key:'photo_more',        label:'שיעורים נוספים'},
+  {key:'photo_hero',        label:'תמונת רקע Hero'},
+];
+
+// ── Navigation ────────────────────────────────
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#sidebar-nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  const idx = ['contact','photos','stats','schedule','faq','testimonials'].indexOf(id);
+  document.querySelectorAll('#sidebar-nav a')[idx].classList.add('active');
+  if (id === 'schedule') renderSchEditor();
+  if (id === 'faq') renderFaq();
+  if (id === 'testimonials') renderTestimonials();
+  if (id === 'photos') renderClassPhotos();
+  if (id === 'stats') renderStats();
+}
+
+// ── Load existing values into form ────────────
+function loadForm() {
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val !== undefined) el.value = val||''; };
+  set('f-phone',         D.phone);
+  set('f-whatsapp',      D.whatsapp);
+  set('f-wa-msg',        D.whatsapp_msg);
+  set('f-address',       D.address);
+  set('f-parking',       D.parking);
+  set('f-hours-week',    D.hours_week);
+  set('f-hours-fri',     D.hours_fri);
+  set('f-instagram',     D.instagram);
+  set('f-instagram-url', D.instagram_url);
+  set('f-facebook-url',  D.facebook_url);
+  set('f-hadar',         D.photo_hadar);
+  if (D.photo_hadar) updatePreviewFromUrl('f-hadar','prev-hadar');
+}
+
+// ── Image handling ────────────────────────────
+function handleFile(input, urlFieldId, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const data = e.target.result;
+    document.getElementById(urlFieldId).value = data;
+    setPreview(previewId, data);
+  };
+  reader.readAsDataURL(file);
+}
+
+function updatePreviewFromUrl(urlFieldId, previewId) {
+  const url = document.getElementById(urlFieldId).value.trim();
+  setPreview(previewId, url);
+}
+
+function setPreview(previewId, src) {
+  const wrap = document.getElementById(previewId);
+  if (!wrap) return;
+  const ph = wrap.querySelector('.ph');
+  let img = wrap.querySelector('img');
+  if (!img) { img = document.createElement('img'); wrap.appendChild(img); }
+  if (src) {
+    img.src = src; img.style.display = 'block';
+    if (ph) ph.style.display = 'none';
+  } else {
+    img.style.display = 'none';
+    if (ph) ph.style.display = '';
+  }
+}
+
+function renderClassPhotos() {
+  const container = document.getElementById('class-photos-container');
+  container.innerHTML = '';
+  CLASS_PHOTO_KEYS.forEach(({key, label}) => {
+    const id_url  = 'f-' + key;
+    const id_prev = 'prev-' + key;
+    const id_file = 'file-' + key;
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.innerHTML = `
+      <div class="card-title">🖼 ${label}</div>
+      <div class="img-upload-wrap">
+        <div class="img-preview" id="${id_prev}">
+          <span class="ph">🖼</span>
+          <input type="file" id="${id_file}" accept="image/*">
+        </div>
+        <div class="img-controls">
+          <div class="field">
+            <label>קישור URL</label>
+            <input type="url" id="${id_url}" placeholder="https://..." value="${D[key]||''}">
+          </div>
+          <div class="img-note">💡 לחצי על הריבוע להעלאת קובץ מהמחשב</div>
+        </div>
+      </div>
+    `;
+    container.appendChild(div);
+    document.getElementById(id_prev).addEventListener('click', () => document.getElementById(id_file).click());
+    document.getElementById(id_file).addEventListener('change', function(){ handleFile(this, id_url, id_prev); });
+    document.getElementById(id_url).addEventListener('input', function(){ setPreview(id_prev, this.value); });
+    if (D[key]) { setPreview(id_prev, D[key]); }
+  });
+}
+
+// ── Stats editor ─────────────────────────────
+function renderStats() {
+  const grid = document.getElementById('stats-grid');
+  grid.innerHTML = '';
+  (D.stats||[]).forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'stat-card';
+    div.innerHTML = `
+      <div class="stat-num">${s.n}${s.label.includes('%')?'':'+'}</div>
+      <div class="field"><label>מספר</label>
+        <input type="text" value="${s.n}" oninput="D.stats[${i}].n=parseInt(this.value)||0;this.previousElementSibling.previousElementSibling.textContent=this.value+(D.stats[${i}].label.includes('%')?'':'+')">
+      </div>
+      <div class="field"><label>תיאור</label>
+        <input type="text" value="${s.label}" oninput="D.stats[${i}].label=this.value">
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// ── Schedule editor ───────────────────────────
+function renderSchEditor() {
+  const tabsEl = document.getElementById('sch-tabs');
+  const edEl   = document.getElementById('sch-editor');
+  tabsEl.innerHTML = '';
+  DAYS.forEach(day => {
+    const btn = document.createElement('button');
+    btn.className = 'sch-tab' + (day === activeDay ? ' active' : '');
+    btn.textContent = day;
+    btn.onclick = () => { activeDay = day; renderSchEditor(); };
+    tabsEl.appendChild(btn);
+  });
+  const rows = D.schedule[activeDay] || [];
+  let html = `<table class="sch-table">
+    <thead><tr>
+      <th>שעה</th><th style="width:180px">שיעור</th><th style="width:130px">מדריכה</th><th>מקומות</th><th></th>
+    </tr></thead><tbody id="sch-tbody">`;
+  rows.forEach((r, i) => {
+    html += `<tr>
+      <td><input class="sch-input-small" type="text" value="${r.t}" oninput="D.schedule['${activeDay}'][${i}].t=this.value"></td>
+      <td><input type="text" value="${r.c}" oninput="D.schedule['${activeDay}'][${i}].c=this.value"></td>
+      <td><input type="text" value="${r.tr}" oninput="D.schedule['${activeDay}'][${i}].tr=this.value"></td>
+      <td><input class="sch-input-num" type="number" min="0" value="${r.s}" oninput="D.schedule['${activeDay}'][${i}].s=parseInt(this.value)||0"></td>
+      <td><button class="del-btn" onclick="delSchRow(${i})" title="מחקי שיעור">✕</button></td>
+    </tr>`;
+  });
+  html += `</tbody></table>
+  <button class="add-row-btn" onclick="addSchRow()">+ הוסיפי שיעור ל${activeDay}</button>`;
+  edEl.innerHTML = html;
+}
+function addSchRow() {
+  if (!D.schedule[activeDay]) D.schedule[activeDay] = [];
+  D.schedule[activeDay].push({t:'08:00', c:'שם שיעור', tr:'הדר בלין', s:8});
+  renderSchEditor();
+}
+function delSchRow(i) {
+  D.schedule[activeDay].splice(i, 1);
+  renderSchEditor();
+}
+
+// ── FAQ editor ────────────────────────────────
+function renderFaq() {
+  const list = document.getElementById('faq-list');
+  list.innerHTML = '';
+  (D.faq||[]).forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'accordion-item';
+    div.innerHTML = `
+      <div class="acc-head" onclick="toggleAcc(this)">
+        <span>❓ ${item.q.substring(0,50)}${item.q.length>50?'...':''}</span>
+        <span>▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="field" style="margin-bottom:.6rem">
+          <label>שאלה</label>
+          <input type="text" value="${escHtml(item.q)}" oninput="D.faq[${i}].q=this.value;this.closest('.accordion-item').querySelector('.acc-head span:first-child').textContent='❓ '+this.value.substring(0,50)">
+        </div>
+        <div class="field">
+          <label>תשובה</label>
+          <textarea oninput="D.faq[${i}].a=this.value">${escHtml(item.a)}</textarea>
+        </div>
+        <div class="acc-actions">
+          <button class="btn-sm btn-danger" onclick="delFaq(${i})">🗑 מחקי</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+function addFaq() {
+  D.faq.push({q:'שאלה חדשה', a:'תשובה...'});
+  renderFaq();
+  const items = document.querySelectorAll('#faq-list .accordion-item');
+  const last = items[items.length-1];
+  if (last) { toggleAcc(last.querySelector('.acc-head')); last.scrollIntoView({behavior:'smooth',block:'center'}); }
+}
+function delFaq(i) { D.faq.splice(i,1); renderFaq(); }
+
+// ── Testimonials editor ───────────────────────
+function renderTestimonials() {
+  const list = document.getElementById('testi-list');
+  list.innerHTML = '';
+  (D.testimonials||[]).forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'accordion-item';
+    div.innerHTML = `
+      <div class="acc-head" onclick="toggleAcc(this)">
+        <span>💬 ${item.name}</span><span>▼</span>
+      </div>
+      <div class="acc-body">
+        <div class="field-row">
+          <div class="field">
+            <label>שם המתאמנת</label>
+            <input type="text" value="${escHtml(item.name)}" oninput="D.testimonials[${i}].name=this.value;this.closest('.accordion-item').querySelector('.acc-head span:first-child').textContent='💬 '+this.value">
+          </div>
+          <div class="field">
+            <label>תיוג (שיעור + זמן)</label>
+            <input type="text" value="${escHtml(item.tag)}" oninput="D.testimonials[${i}].tag=this.value">
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:.6rem">
+          <label>אות ראשונה (לאייקון)</label>
+          <input type="text" maxlength="1" value="${escHtml(item.init)}" oninput="D.testimonials[${i}].init=this.value" style="width:60px">
+        </div>
+        <div class="field">
+          <label>ציטוט</label>
+          <textarea oninput="D.testimonials[${i}].text=this.value">${escHtml(item.text)}</textarea>
+        </div>
+        <div class="acc-actions">
+          <button class="btn-sm btn-danger" onclick="delTesti(${i})">🗑 מחקי</button>
+        </div>
+      </div>
+    `;
+    list.appendChild(div);
+  });
+}
+function addTestimonial() {
+  D.testimonials.push({text:'ציטוט...', name:'שם', tag:'שיעור', init:'א'});
+  renderTestimonials();
+  const items = document.querySelectorAll('#testi-list .accordion-item');
+  const last = items[items.length-1];
+  if (last) { toggleAcc(last.querySelector('.acc-head')); last.scrollIntoView({behavior:'smooth',block:'center'}); }
+}
+function delTesti(i) { D.testimonials.splice(i,1); renderTestimonials(); }
+
+// ── Accordion toggle ──────────────────────────
+function toggleAcc(head) {
+  const body = head.nextElementSibling;
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.acc-body.open').forEach(b => b.classList.remove('open'));
+  if (!isOpen) body.classList.add('open');
+}
+
+// ── Collect form values ───────────────────────
+function collectForm() {
+  const g = id => document.getElementById(id)?.value?.trim() || '';
+  D.phone         = g('f-phone');
+  D.whatsapp      = g('f-whatsapp');
+  D.whatsapp_msg  = g('f-wa-msg');
+  D.address       = g('f-address');
+  D.parking       = g('f-parking');
+  D.hours_week    = g('f-hours-week');
+  D.hours_fri     = g('f-hours-fri');
+  D.instagram     = g('f-instagram');
+  D.instagram_url = g('f-instagram-url');
+  D.facebook_url  = g('f-facebook-url');
+  D.photo_hadar   = g('f-hadar');
+  CLASS_PHOTO_KEYS.forEach(({key}) => { D[key] = g('f-'+key) || D[key]; });
+}
+
+// ── Save → download content.js ────────────────
+function saveContent() {
+  collectForm();
+  const js = `/**
+ * ╔══════════════════════════════════════════╗
+ * ║        DORA Studio — קובץ תוכן          ║
+ * ╚══════════════════════════════════════════╝
+ * נוצר אוטומטית על-ידי עורך התוכן
+ * תאריך: ${new Date().toLocaleString('he-IL')}
+ */\n\nwindow.DORA = ${JSON.stringify(D, null, 2)};\n`;
+  const blob = new Blob([js], {type:'text/javascript'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'content.js';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('✅ הקובץ הורד! החליפי את content.js הישן בחדש');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ──────────────────────────────────────
+loadForm();
+</script>
+</body>
+</html>
